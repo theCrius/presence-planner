@@ -533,3 +533,53 @@ html.dark .input-edit {
 html.dark * {
     scrollbar-color: #3a3a5c transparent;
 }
+
+/* === Overlay arresto === */
+.shutdown-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.shutdown-overlay.hidden {
+    display: none;
+}
+
+.shutdown-box {
+    background: #fff;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.shutdown-box h2 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.shutdown-box p {
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.shutdown-reconnect {
+    color: #27ae60 !important;
+    font-weight: 600;
+}
+
+html.dark .shutdown-box {
+    background: #1f2940;
+}
+
+html.dark .shutdown-box h2 {
+    color: #e0e0e0;
+}
+
+html.dark .shutdown-box p {
+    color: #aaa;
+}

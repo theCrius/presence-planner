@@ -17,12 +17,64 @@
             <a href="/settings">Impostazioni</a>
         </div>
         {% if frozen %}
-        <button class="btn-quit" onclick="if(confirm('Chiudere Presence Planning?')){fetch('/api/shutdown',{method:'POST'});window.close()}">Chiudi</button>
+        <button class="btn-quit" id="btn-quit">Chiudi</button>
         {% endif %}
     </nav>
     <main class="container">
         {% block content %}{% endblock %}
     </main>
+    <div class="shutdown-overlay hidden" id="shutdown-overlay">
+        <div class="shutdown-box">
+            <h2>Applicazione arrestata</h2>
+            <p>Puoi chiudere questa scheda.</p>
+            <p class="shutdown-reconnect hidden" id="shutdown-reconnect">Riconnessione in corso...</p>
+        </div>
+    </div>
     {% block scripts %}{% endblock %}
+    {% if frozen %}
+    <script>
+    (function() {
+        const overlay = document.getElementById('shutdown-overlay');
+        const reconnectMsg = document.getElementById('shutdown-reconnect');
+        const btnQuit = document.getElementById('btn-quit');
+        let polling = null;
+        let serverDown = false;
+
+        function showOverlay() {
+            if (serverDown) return;
+            serverDown = true;
+            overlay.classList.remove('hidden');
+            // Polling per riconnessione
+            polling = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/ping');
+                    if (res.ok) {
+                        clearInterval(polling);
+                        serverDown = false;
+                        overlay.classList.add('hidden');
+                        reconnectMsg.classList.add('hidden');
+                    }
+                } catch(e) {
+                    reconnectMsg.classList.remove('hidden');
+                }
+            }, 2000);
+        }
+
+        // Polling periodico per rilevare server down
+        setInterval(async () => {
+            if (serverDown) return;
+            try { await fetch('/api/ping'); }
+            catch(e) { showOverlay(); }
+        }, 3000);
+
+        btnQuit.addEventListener('click', async () => {
+            if (!confirm('Chiudere Presence Planning?')) return;
+            try { await fetch('/api/shutdown', {method: 'POST'}); } catch(e) {}
+            showOverlay();
+            window.close();
+        });
+    })();
+    </script>
+    {% endif %}
 </body>
 </html>
