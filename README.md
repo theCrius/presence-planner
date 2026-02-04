@@ -12,7 +12,7 @@ Sistema di pianificazione presenze per piccole realta lavorative. Permette di ge
 - Pre-compilazione automatica dal giorno precedente
 - Foglio firme stampabile con etichette personalizzabili
 - Tema chiaro / scuro
-- Eseguibile portatile (utilizzabile da chiavetta USB)
+- Eseguibile portabile (utilizzabile da chiavetta USB)
 
 ## Installazione
 
