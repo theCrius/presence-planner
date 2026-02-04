@@ -136,6 +136,109 @@ def api_personnel_delete(id):
     return jsonify({'ok': True})
 
 
+# === API Day Plans ===
+
+@app.route('/api/day/<date>', methods=['GET'])
+def api_day_load(date):
+    """Carica l'ultimo piano salvato per una data. Restituisce assegnazioni e assenze."""
+    conn = get_connection()
+    plan = conn.execute(
+        'SELECT * FROM day_plans WHERE date = ? ORDER BY version DESC LIMIT 1',
+        (date,)
+    ).fetchone()
+    if not plan:
+        conn.close()
+        return jsonify({'plan': None, 'assignments': [], 'absences': []})
+
+    assignments = conn.execute('''
+        SELECT a.personnel_id, a.workplace_id, p.name as personnel_name, w.name as workplace_name
+        FROM assignments a
+        JOIN personnel p ON p.id = a.personnel_id
+        JOIN workplaces w ON w.id = a.workplace_id
+        WHERE a.day_plan_id = ?
+    ''', (plan['id'],)).fetchall()
+
+    absences = conn.execute('''
+        SELECT a.personnel_id, a.type, p.name as personnel_name
+        FROM absences a
+        JOIN personnel p ON p.id = a.personnel_id
+        WHERE a.day_plan_id = ?
+    ''', (plan['id'],)).fetchall()
+
+    conn.close()
+    return jsonify({
+        'plan': dict(plan),
+        'assignments': [dict(r) for r in assignments],
+        'absences': [dict(r) for r in absences]
+    })
+
+
+@app.route('/api/day/<date>/save', methods=['POST'])
+def api_day_save(date):
+    """Salva una nuova versione del piano giornaliero."""
+    data = request.get_json()
+    # data.assignments = [{personnel_id, workplace_id}, ...]
+    # data.absences = [{personnel_id, type}, ...]
+    conn = get_connection()
+
+    # Calcola prossima versione per questa data
+    last = conn.execute(
+        'SELECT MAX(version) as v FROM day_plans WHERE date = ?', (date,)
+    ).fetchone()
+    next_version = (last['v'] or 0) + 1
+
+    cursor = conn.execute(
+        'INSERT INTO day_plans (date, version) VALUES (?, ?)',
+        (date, next_version)
+    )
+    plan_id = cursor.lastrowid
+
+    for a in data.get('assignments', []):
+        conn.execute(
+            'INSERT INTO assignments (day_plan_id, personnel_id, workplace_id) VALUES (?, ?, ?)',
+            (plan_id, a['personnel_id'], a['workplace_id'])
+        )
+
+    for a in data.get('absences', []):
+        conn.execute(
+            'INSERT INTO absences (day_plan_id, personnel_id, type) VALUES (?, ?, ?)',
+            (plan_id, a['personnel_id'], a['type'])
+        )
+
+    conn.commit()
+    plan = conn.execute('SELECT * FROM day_plans WHERE id = ?', (plan_id,)).fetchone()
+    conn.close()
+    return jsonify({'ok': True, 'plan': dict(plan)}), 201
+
+
+@app.route('/api/day/<date>/previous', methods=['GET'])
+def api_day_previous(date):
+    """Trova il piano più recente precedente a questa data (per auto-fill)."""
+    conn = get_connection()
+    plan = conn.execute(
+        'SELECT * FROM day_plans WHERE date < ? ORDER BY date DESC, version DESC LIMIT 1',
+        (date,)
+    ).fetchone()
+    if not plan:
+        conn.close()
+        return jsonify({'plan': None, 'assignments': [], 'absences': []})
+
+    assignments = conn.execute('''
+        SELECT a.personnel_id, a.workplace_id, p.name as personnel_name, w.name as workplace_name
+        FROM assignments a
+        JOIN personnel p ON p.id = a.personnel_id
+        JOIN workplaces w ON w.id = a.workplace_id
+        WHERE a.day_plan_id = ?
+    ''', (plan['id'],)).fetchall()
+
+    # Le assenze non vengono copiate dal giorno precedente
+    conn.close()
+    return jsonify({
+        'plan': dict(plan),
+        'assignments': [dict(r) for r in assignments]
+    })
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True, port=5000)

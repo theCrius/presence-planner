@@ -1,6 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Giornaliero — Presence Planning{% endblock %}
 {% block content %}
-<h1>Vista Giornaliera</h1>
-<p>In costruzione.</p>
+<div class="day-header">
+    <h1>Vista Giornaliera</h1>
+    <div class="day-controls">
+        <button class="btn btn-small" id="btn-prev-day">&larr;</button>
+        <input type="date" id="input-date">
+        <button class="btn btn-small" id="btn-next-day">&rarr;</button>
+        <button class="btn btn-primary" id="btn-save">Salva</button>
+        <a class="btn btn-small" id="btn-print" href="#" target="_blank">Stampa foglio firme</a>
+    </div>
+</div>
+
+<div class="day-layout">
+    <!-- Colonna sinistra: disponibili -->
+    <div class="day-column">
+        <h2>Disponibili</h2>
+        <div class="drop-zone" id="zone-available" data-zone="available"></div>
+    </div>
+
+    <!-- Colonna centrale: luoghi di lavoro -->
+    <div class="day-column day-column-center">
+        <h2>Luoghi di lavoro</h2>
+        <div id="workplaces-container"></div>
+    </div>
+
+    <!-- Colonna destra: assenze -->
+    <div class="day-column">
+        <h2>Malattia</h2>
+        <div class="drop-zone" id="zone-sick" data-zone="sick_leave"></div>
+        <h2>Non disponibile</h2>
+        <div class="drop-zone" id="zone-unavailable" data-zone="unavailable"></div>
+    </div>
+</div>
+
+<div id="save-feedback" class="save-feedback hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}
