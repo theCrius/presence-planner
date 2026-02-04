@@ -370,3 +370,127 @@ h1 {
     scrollbar-width: thin;
     scrollbar-color: #ccc transparent;
 }
+
+/* === Impostazioni: sezioni e toggle === */
+.settings-section {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.settings-section:first-of-type {
+    margin-top: 0;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* === Tema scuro === */
+html.dark body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+}
+
+html.dark .navbar {
+    background: #16213e;
+}
+
+html.dark .container h1,
+html.dark .container h2 {
+    color: #e0e0e0;
+}
+
+html.dark .day-column h2 {
+    color: #aaa;
+}
+
+html.dark .drop-zone {
+    background: #1f2940;
+    border-color: #3a3a5c;
+}
+
+html.dark .drop-zone.drag-over {
+    border-color: #5dade2;
+    background: #233554;
+}
+
+html.dark .person-card {
+    background: #3498db;
+    color: #fff;
+}
+
+html.dark .workplace-section h3 {
+    color: #ccc;
+}
+
+html.dark .table {
+    background: #1f2940;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+html.dark .table th {
+    background: #16213e;
+    color: #ccc;
+}
+
+html.dark .table td {
+    border-bottom-color: #2a3a5c;
+    color: #e0e0e0;
+}
+
+html.dark .form-inline input[type="text"],
+html.dark .settings-form input,
+html.dark .settings-form select,
+html.dark .day-controls input[type="date"] {
+    background: #1f2940;
+    border-color: #3a3a5c;
+    color: #e0e0e0;
+}
+
+html.dark .btn-small {
+    background: #2a3a5c;
+    color: #e0e0e0;
+}
+
+html.dark .btn-small:hover {
+    background: #3a4a6c;
+}
+
+html.dark .keybind-hint {
+    background: #1a1a2e;
+    color: #666;
+}
+
+html.dark .keybind-hint kbd {
+    background: #2a3a5c;
+    border-color: #3a3a5c;
+    color: #ccc;
+}
+
+html.dark .settings-section {
+    color: #aaa;
+}
+
+html.dark .settings-form label {
+    color: #aaa;
+}
+
+html.dark .theme-toggle {
+    color: #e0e0e0;
+}
+
+html.dark .input-edit {
+    background: #1f2940;
+    color: #e0e0e0;
+    border-color: #5dade2;
+}
+
+html.dark * {
+    scrollbar-color: #3a3a5c transparent;
+}

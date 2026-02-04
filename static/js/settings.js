@@ -1,3 +1,20 @@
+// === Tema chiaro/scuro ===
+const btnTheme = document.getElementById('btn-theme');
+const isDark = () => document.documentElement.classList.contains('dark');
+
+function updateThemeBtn() {
+    btnTheme.textContent = isDark() ? 'Chiaro' : 'Scuro';
+}
+
+btnTheme.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark() ? 'dark' : 'light');
+    updateThemeBtn();
+});
+
+updateThemeBtn();
+
+// === Impostazioni stampa ===
 const form = document.getElementById('form-settings');
 const feedback = document.getElementById('save-feedback');
 
