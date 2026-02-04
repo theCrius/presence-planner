@@ -239,6 +239,55 @@ def api_day_previous(date):
     })
 
 
+# === Pagina Stampa ===
+
+@app.route('/print/<date>')
+def print_page(date):
+    """Foglio firme stampabile per una data."""
+    conn = get_connection()
+    plan = conn.execute(
+        'SELECT * FROM day_plans WHERE date = ? ORDER BY version DESC LIMIT 1',
+        (date,)
+    ).fetchone()
+
+    rows = []
+    if plan:
+        # Personale assegnato ai luoghi di lavoro
+        assigned = conn.execute('''
+            SELECT p.name as personnel_name, w.name as workplace_name
+            FROM assignments a
+            JOIN personnel p ON p.id = a.personnel_id
+            JOIN workplaces w ON w.id = a.workplace_id
+            WHERE a.day_plan_id = ?
+        ''', (plan['id'],)).fetchall()
+        for r in assigned:
+            rows.append({'name': r['personnel_name'], 'workplace': r['workplace_name']})
+
+        # Personale in malattia
+        sick = conn.execute('''
+            SELECT p.name as personnel_name
+            FROM absences a
+            JOIN personnel p ON p.id = a.personnel_id
+            WHERE a.day_plan_id = ? AND a.type = 'sick_leave'
+        ''', (plan['id'],)).fetchall()
+        for r in sick:
+            rows.append({'name': r['personnel_name'], 'workplace': 'Malattia'})
+
+        # Personale non disponibile
+        unavail = conn.execute('''
+            SELECT p.name as personnel_name
+            FROM absences a
+            JOIN personnel p ON p.id = a.personnel_id
+            WHERE a.day_plan_id = ? AND a.type = 'unavailable'
+        ''', (plan['id'],)).fetchall()
+        for r in unavail:
+            rows.append({'name': r['personnel_name'], 'workplace': 'Non disponibile'})
+
+    conn.close()
+    rows.sort(key=lambda r: r['name'].lower())
+    return render_template('print.html', date=date, rows=rows)
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True, port=5000)

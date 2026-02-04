@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Foglio Firme — {{ date }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}">
+</head>
+<body>
+    <h1>Foglio Firme — {{ date }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th class="col-name">Nome</th>
+                <th class="col-workplace">Luogo di lavoro</th>
+                <th class="col-time">Ora inizio</th>
+                <th class="col-time">Ora fine</th>
+                <th class="col-signature">Firma</th>
+                <th class="col-notes">Esigenze postazione</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.workplace }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% if not rows %}
+            <tr>
+                <td colspan="6" class="empty">Nessun dato per questa data.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <button class="no-print btn-print" onclick="window.print()">Stampa</button>
+</body>
+</html>
