@@ -85,3 +85,7 @@ Tutti i dati sono contenuti nel file `presence.db` nella stessa cartella dell'ap
 - HTML, CSS, JavaScript (senza framework)
 - PyInstaller (packaging)
 - Waitress (server WSGI per l'eseguibile)
+
+## Licenza
+
+Questo progetto e distribuito sotto licenza [CC BY-NC 4.0](LICENSE) (Creative Commons Attribution-NonCommercial 4.0 International). E possibile riutilizzare e redistribuire il codice a condizione di citare l'autore originale e di non utilizzarlo a scopo commerciale.
