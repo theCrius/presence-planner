@@ -2,5 +2,23 @@
 {% block title %}Luoghi di lavoro — Presence Planning{% endblock %}
 {% block content %}
 <h1>Luoghi di lavoro</h1>
-<p>In costruzione.</p>
+
+<form id="form-add" class="form-inline">
+    <input type="text" id="input-name" placeholder="Nome luogo di lavoro" required>
+    <button type="submit" class="btn btn-primary">Aggiungi</button>
+</form>
+
+<table class="table" id="table-workplaces">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/workplaces.js') }}"></script>
 {% endblock %}
