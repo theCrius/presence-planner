@@ -1,10 +1,12 @@
 // === Stato ===
 let currentDate = todayStr();
+let daySaved = false;
 const inputDate = document.getElementById('input-date');
 const btnSave = document.getElementById('btn-save');
 const btnPrint = document.getElementById('btn-print');
 const btnPrev = document.getElementById('btn-prev-day');
 const btnNext = document.getElementById('btn-next-day');
+const dayStatus = document.getElementById('day-status');
 const feedback = document.getElementById('save-feedback');
 const zoneAvailable = document.getElementById('zone-available');
 const zoneSick = document.getElementById('zone-sick');
@@ -80,15 +82,18 @@ async function loadDay() {
     if (dayData.plan) {
         // Carica piano esistente
         placeFromPlan(personnel, dayData.assignments, dayData.absences);
+        setDayStatus('saved');
     } else {
         // Prova auto-fill dal giorno precedente
         const prevRes = await fetch(`/api/day/${currentDate}/previous`);
         const prevData = await prevRes.json();
         if (prevData.plan) {
             placeFromPlan(personnel, prevData.assignments, []);
+            setDayStatus('prefilled');
         } else {
             // Tutti disponibili
             personnel.forEach(p => zoneAvailable.appendChild(createCard(p.id, p.name)));
+            setDayStatus('empty');
         }
     }
 }
@@ -205,6 +210,7 @@ async function save() {
     });
 
     if (res.ok) {
+        setDayStatus('saved');
         showFeedback('Piano salvato!', 'success');
     } else {
         showFeedback('Errore nel salvataggio.', 'error');
@@ -226,9 +232,33 @@ function esc(str) {
     return d.innerHTML;
 }
 
+function setDayStatus(status) {
+    daySaved = (status === 'saved');
+    dayStatus.className = 'day-status';
+    if (status === 'saved') {
+        dayStatus.textContent = 'Salvato';
+        dayStatus.classList.add('status-saved');
+    } else if (status === 'prefilled') {
+        dayStatus.textContent = 'Non salvato (pre-compilato)';
+        dayStatus.classList.add('status-unsaved');
+    } else {
+        dayStatus.textContent = 'Non salvato';
+        dayStatus.classList.add('status-unsaved');
+    }
+}
+
 function updatePrintLink() {
     btnPrint.href = `/print/${currentDate}`;
 }
+
+btnPrint.addEventListener('click', (e) => {
+    if (!daySaved) {
+        e.preventDefault();
+        if (confirm('Il piano non è ancora salvato. Salvare prima di stampare?')) {
+            save();
+        }
+    }
+});
 
 function showFeedback(msg, type) {
     feedback.textContent = msg;

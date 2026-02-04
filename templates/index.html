@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Giornaliero — Presence Planning{% endblock %}
+{% block title %}Pianificazione — Presence Planning{% endblock %}
 {% block content %}
 <div class="day-header">
     <h1>Vista Giornaliera</h1>
@@ -7,6 +7,7 @@
         <button class="btn btn-small" id="btn-prev-day">&larr;</button>
         <input type="date" id="input-date">
         <button class="btn btn-small" id="btn-next-day">&rarr;</button>
+        <span class="day-status" id="day-status"></span>
         <button class="btn btn-primary" id="btn-save">Salva</button>
         <a class="btn btn-small" id="btn-print" href="#" target="_blank">Stampa foglio firme</a>
     </div>
