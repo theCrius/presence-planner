@@ -4,6 +4,15 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+
+@app.after_request
+def no_cache_api(response):
+    """Disabilita il caching del browser per le risposte API."""
+    if request.path.startswith('/api/'):
+        response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
 # Valori predefiniti per le impostazioni di stampa
 PRINT_DEFAULTS = {
     'print_title': 'Foglio Firme',
