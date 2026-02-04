@@ -6,7 +6,6 @@ const btnSave = document.getElementById('btn-save');
 const btnPrint = document.getElementById('btn-print');
 const btnPrev = document.getElementById('btn-prev-day');
 const btnNext = document.getElementById('btn-next-day');
-const dayStatus = document.getElementById('day-status');
 const feedback = document.getElementById('save-feedback');
 const zoneAvailable = document.getElementById('zone-available');
 const zoneSick = document.getElementById('zone-sick');
@@ -234,17 +233,8 @@ function esc(str) {
 
 function setDayStatus(status) {
     daySaved = (status === 'saved');
-    dayStatus.className = 'day-status';
-    if (status === 'saved') {
-        dayStatus.textContent = 'Salvato';
-        dayStatus.classList.add('status-saved');
-    } else if (status === 'prefilled') {
-        dayStatus.textContent = 'Non salvato (pre-compilato)';
-        dayStatus.classList.add('status-unsaved');
-    } else {
-        dayStatus.textContent = 'Non salvato';
-        dayStatus.classList.add('status-unsaved');
-    }
+    btnSave.classList.remove('status-saved', 'status-unsaved');
+    btnSave.classList.add(daySaved ? 'status-saved' : 'status-unsaved');
 }
 
 function updatePrintLink() {
