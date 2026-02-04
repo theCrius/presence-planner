@@ -263,6 +263,11 @@ h1 {
     margin-bottom: 0.75rem;
 }
 
+.workplace-section .drop-zone {
+    min-height: 2.5rem;
+    flex: none;
+}
+
 .workplace-section h3 {
     font-size: 0.9rem;
     font-weight: 600;
