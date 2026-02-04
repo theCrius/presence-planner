@@ -31,6 +31,12 @@ CREATE TABLE IF NOT EXISTS assignments (
     workplace_id INTEGER NOT NULL REFERENCES workplaces(id)
 );
 
+-- Impostazioni chiave/valore
+CREATE TABLE IF NOT EXISTS settings (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
 -- Assenze: persona non disponibile per un piano
 CREATE TABLE IF NOT EXISTS absences (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -2,20 +2,20 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Foglio Firme — {{ date }}</title>
+    <title>{{ s.print_title }} — {{ date }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}">
 </head>
 <body>
-    <h1>Foglio Firme — {{ date }}</h1>
+    <h1>{{ s.print_title }} — {{ date }}</h1>
     <table>
         <thead>
             <tr>
-                <th class="col-name">Nome</th>
-                <th class="col-workplace">Luogo di lavoro</th>
-                <th class="col-time">Ora inizio</th>
-                <th class="col-time">Ora fine</th>
-                <th class="col-signature">Firma</th>
-                <th class="col-notes">Esigenze postazione</th>
+                <th class="col-name">{{ s.print_col_name }}</th>
+                <th class="col-workplace">{{ s.print_col_workplace }}</th>
+                <th class="col-time">{{ s.print_col_time_start }}</th>
+                <th class="col-time">{{ s.print_col_time_end }}</th>
+                <th class="col-signature">{{ s.print_col_signature }}</th>
+                <th class="col-notes">{{ s.print_col_notes }}</th>
             </tr>
         </thead>
         <tbody>

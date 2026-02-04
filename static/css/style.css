@@ -156,6 +156,30 @@ h1 {
     width: 100%;
 }
 
+/* === Form impostazioni === */
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 450px;
+}
+
+.settings-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.settings-form input,
+.settings-form select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
 /* === Vista Giornaliera === */
 .day-header {
     display: flex;

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Impostazioni — Presence Planning{% endblock %}
+{% block content %}
+<h1>Impostazioni stampa</h1>
+
+<form id="form-settings" class="settings-form">
+    <label>
+        Titolo foglio
+        <input type="text" name="print_title">
+    </label>
+    <label>
+        Formato data
+        <select name="print_date_format">
+            <option value="dd/mm/yyyy">dd/mm/yyyy</option>
+            <option value="yyyy-mm-dd">yyyy-mm-dd</option>
+            <option value="mm-dd-yyyy">mm-dd-yyyy</option>
+        </select>
+    </label>
+    <label>
+        Colonna "Nome"
+        <input type="text" name="print_col_name">
+    </label>
+    <label>
+        Colonna "Luogo di lavoro"
+        <input type="text" name="print_col_workplace">
+    </label>
+    <label>
+        Colonna "Ora inizio"
+        <input type="text" name="print_col_time_start">
+    </label>
+    <label>
+        Colonna "Ora fine"
+        <input type="text" name="print_col_time_end">
+    </label>
+    <label>
+        Colonna "Firma"
+        <input type="text" name="print_col_signature">
+    </label>
+    <label>
+        Colonna "Esigenze postazione"
+        <input type="text" name="print_col_notes">
+    </label>
+    <button type="submit" class="btn btn-primary">Salva</button>
+</form>
+
+<div id="save-feedback" class="save-feedback hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endblock %}

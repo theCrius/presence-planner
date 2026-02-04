@@ -1,7 +1,41 @@
 from flask import Flask, render_template, request, jsonify
 from database import init_db, get_connection
+from datetime import datetime
 
 app = Flask(__name__)
+
+# Valori predefiniti per le impostazioni di stampa
+PRINT_DEFAULTS = {
+    'print_title': 'Foglio Firme',
+    'print_date_format': 'dd/mm/yyyy',
+    'print_col_name': 'Nome',
+    'print_col_workplace': 'Luogo di lavoro',
+    'print_col_time_start': 'Ora inizio',
+    'print_col_time_end': 'Ora fine',
+    'print_col_signature': 'Firma',
+    'print_col_notes': 'Esigenze postazione',
+}
+
+
+def get_print_settings():
+    """Carica le impostazioni di stampa, con fallback ai valori predefiniti."""
+    conn = get_connection()
+    rows = conn.execute('SELECT key, value FROM settings WHERE key LIKE "print_%"').fetchall()
+    conn.close()
+    settings = dict(PRINT_DEFAULTS)
+    for r in rows:
+        settings[r['key']] = r['value']
+    return settings
+
+
+def format_date(date_str, fmt):
+    """Formatta una data YYYY-MM-DD secondo il formato scelto."""
+    d = datetime.strptime(date_str, '%Y-%m-%d')
+    if fmt == 'dd/mm/yyyy':
+        return d.strftime('%d/%m/%Y')
+    elif fmt == 'mm-dd-yyyy':
+        return d.strftime('%m-%d-%Y')
+    return date_str  # yyyy-mm-dd
 
 
 # === Pagine HTML ===
@@ -22,6 +56,12 @@ def workplaces_page():
 def personnel_page():
     """Pagina gestione personale."""
     return render_template('personnel.html')
+
+
+@app.route('/settings')
+def settings_page():
+    """Pagina impostazioni stampa."""
+    return render_template('settings.html')
 
 
 # === API Workplaces ===
@@ -239,6 +279,31 @@ def api_day_previous(date):
     })
 
 
+# === API Settings ===
+
+@app.route('/api/settings', methods=['GET'])
+def api_settings_get():
+    """Restituisce tutte le impostazioni di stampa."""
+    return jsonify(get_print_settings())
+
+
+@app.route('/api/settings', methods=['PUT'])
+def api_settings_update():
+    """Aggiorna le impostazioni di stampa."""
+    data = request.get_json()
+    conn = get_connection()
+    for key, value in data.items():
+        if key in PRINT_DEFAULTS:
+            conn.execute(
+                'INSERT INTO settings (key, value) VALUES (?, ?) '
+                'ON CONFLICT(key) DO UPDATE SET value = ?',
+                (key, value, value)
+            )
+    conn.commit()
+    conn.close()
+    return jsonify(get_print_settings())
+
+
 # === Pagina Stampa ===
 
 @app.route('/print/<date>')
@@ -285,7 +350,9 @@ def print_page(date):
 
     conn.close()
     rows.sort(key=lambda r: r['name'].lower())
-    return render_template('print.html', date=date, rows=rows)
+    settings = get_print_settings()
+    formatted_date = format_date(date, settings['print_date_format'])
+    return render_template('print.html', date=formatted_date, rows=rows, s=settings)
 
 
 if __name__ == '__main__':
