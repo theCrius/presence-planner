@@ -135,6 +135,17 @@ function createCard(id, name) {
     card.addEventListener('dragend', () => {
         card.classList.remove('dragging');
     });
+    // Shortcut: Shift=disponibile, Ctrl=malattia, Alt=non disponibile
+    card.addEventListener('click', (e) => {
+        if (e.shiftKey) {
+            zoneAvailable.appendChild(card);
+        } else if (e.ctrlKey) {
+            zoneSick.appendChild(card);
+        } else if (e.altKey) {
+            e.preventDefault();
+            zoneUnavailable.appendChild(card);
+        }
+    });
     return card;
 }
 
