@@ -181,23 +181,18 @@ h1 {
 }
 
 /* === Vista Giornaliera === */
-.day-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+.day-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1rem;
     margin-bottom: 0.75rem;
     flex-shrink: 0;
-}
-
-.day-header h1 {
-    margin-bottom: 0;
 }
 
 .day-controls {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 
