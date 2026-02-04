@@ -175,22 +175,34 @@ h1 {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 1rem;
-    align-items: start;
+    /* Riempie lo spazio tra header e footer */
+    height: calc(100vh - 160px);
+}
+
+.day-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .day-column h2 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #555;
+    flex-shrink: 0;
 }
 
 .day-column-center {
     min-width: 0;
 }
 
+/* Colonna destra: malattia e non disponibile dividono lo spazio */
+.day-column-right {
+    gap: 0.5rem;
+}
+
 /* === Drop zones === */
 .drop-zone {
-    min-height: 60px;
     background: #fff;
     border: 2px dashed #ccc;
     border-radius: 6px;
@@ -199,6 +211,15 @@ h1 {
     flex-wrap: wrap;
     gap: 0.4rem;
     align-content: flex-start;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+#workplaces-container {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .drop-zone.drag-over {
