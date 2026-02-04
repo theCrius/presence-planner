@@ -14,6 +14,12 @@ else:
     app = Flask(__name__)
 
 
+@app.context_processor
+def inject_frozen():
+    """Rende disponibile il flag 'frozen' in tutti i template."""
+    return {'frozen': getattr(sys, 'frozen', False)}
+
+
 @app.after_request
 def no_cache_api(response):
     """Disabilita il caching del browser per le risposte API."""
@@ -371,6 +377,14 @@ def print_page(date):
     settings = get_print_settings()
     formatted_date = format_date(date, settings['print_date_format'])
     return render_template('print.html', date=formatted_date, rows=rows, s=settings)
+
+
+@app.route('/api/shutdown', methods=['POST'])
+def api_shutdown():
+    """Chiude il server. Disponibile solo quando l'app è impacchettata."""
+    if not getattr(sys, 'frozen', False):
+        return jsonify({'error': 'Disponibile solo in modalità portatile'}), 403
+    os._exit(0)
 
 
 if __name__ == '__main__':

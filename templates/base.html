@@ -16,6 +16,9 @@
             <a href="/personnel">Personale</a>
             <a href="/settings">Impostazioni</a>
         </div>
+        {% if frozen %}
+        <button class="btn-quit" onclick="if(confirm('Chiudere Presence Planning?')){fetch('/api/shutdown',{method:'POST'});window.close()}">Chiudi</button>
+        {% endif %}
     </nav>
     <main class="container">
         {% block content %}{% endblock %}

@@ -39,6 +39,23 @@ body {
 .navbar-links {
     display: flex;
     gap: 1rem;
+    flex: 1;
+}
+
+.btn-quit {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: auto;
+}
+
+.btn-quit:hover {
+    background: #e74c3c;
+    color: #fff;
 }
 
 .navbar-links a {
