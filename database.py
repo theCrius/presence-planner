@@ -1,8 +1,24 @@
 import sqlite3
 import os
+import sys
 
-DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'presence.db')
-SCHEMA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'schema.sql')
+
+def _get_base_dir():
+    """Directory delle risorse (sorgente o bundle PyInstaller)."""
+    if getattr(sys, 'frozen', False):
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def _get_data_dir():
+    """Directory per i dati persistenti (DB). Accanto all'exe se frozen."""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+DATABASE_PATH = os.path.join(_get_data_dir(), 'presence.db')
+SCHEMA_PATH = os.path.join(_get_base_dir(), 'schema.sql')
 
 
 def get_connection():

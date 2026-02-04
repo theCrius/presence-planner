@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-from database import init_db, get_connection
+from database import init_db, get_connection, _get_base_dir
 from datetime import datetime
+import sys
+import os
 
-app = Flask(__name__)
+if getattr(sys, 'frozen', False):
+    # PyInstaller: risorse estratte in _MEIPASS
+    base = _get_base_dir()
+    app = Flask(__name__,
+                template_folder=os.path.join(base, 'templates'),
+                static_folder=os.path.join(base, 'static'))
+else:
+    app = Flask(__name__)
 
 
 @app.after_request
@@ -366,4 +375,14 @@ def print_page(date):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=5000)
+    port = 5000
+
+    if getattr(sys, 'frozen', False):
+        import webbrowser
+        import threading
+        threading.Timer(1.0, lambda: webbrowser.open(f'http://localhost:{port}')).start()
+        from waitress import serve
+        print(f'Presence Planning avviato su http://localhost:{port}')
+        serve(app, host='127.0.0.1', port=port)
+    else:
+        app.run(debug=True, port=port)
