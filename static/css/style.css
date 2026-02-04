@@ -258,3 +258,20 @@ h1 {
     background: #e74c3c;
     color: #fff;
 }
+
+/* === Footer scorciatoie === */
+.keybind-hint {
+    margin-top: 2rem;
+    text-align: center;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.keybind-hint kbd {
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.75rem;
+    font-family: inherit;
+}
